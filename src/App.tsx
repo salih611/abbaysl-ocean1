@@ -21,7 +21,7 @@ const UPSTASH_URL = "https://uncommon-monkey-135537.upstash.io";
 const UPSTASH_TOKEN = "gQAAAAAAAhFxAAIgcDIyZDllZWY2MjZlZDU0MjAwOTYwYzhjYTkzYmI4MDY3ZQ";
 
 // Minecraft hesabı için link
-const getMinecraftLink = (username: string) => `https://nameMC.com/profile/${username}`;
+const getMinecraftLink = (username: string) => `https://namemc.com/profile/${username}`;
 
 const KITS: Record<string, { ad: string; icon: JSX.Element; color: string }> = {
   vanilla: { 
@@ -66,7 +66,7 @@ const KITS: Record<string, { ad: string; icon: JSX.Element; color: string }> = {
   },
 };
 
-// YENİ PUANLAMA SİSTEMİ (HT1=100'den başlıyor)
+// YENİ PUANLAMA SİSTEMİ
 const TIER_POINTS: Record<string, number> = {
   HT1: 100, HT2: 85, HT3: 70, HT4: 60, HT5: 50,
   LT1: 40,  LT2: 30, LT3: 20, LT4: 10, LT5: 5,
@@ -363,7 +363,7 @@ export default function App() {
                             <th className="text-left px-6 py-4 text-xs font-semibold text-white/40 uppercase tracking-wider">Oyuncu</th>
                             <th className="text-center px-4 py-4 text-xs font-semibold text-white/40 uppercase tracking-wider w-24">Bölge</th>
                             <th className="text-right px-6 py-4 text-xs font-semibold text-white/40 uppercase tracking-wider">Tierler</th>
-                          <tr>
+                          </tr>
                         </thead>
                         <tbody className="divide-y divide-white/[0.03]">
                           {kitPlayers.slice(0, 50).map((player, idx) => (
