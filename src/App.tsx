@@ -16,9 +16,9 @@ interface Player {
 type KitKey = "overall" | "vanilla" | "sword" | "axe" | "nethpot" | "pot" | "uhc" | "mace" | "smp";
 type PageType = "home" | "rankings";
 
-// UPSTASH REDIS BAĞLANTI
-const UPSTASH_URL = "https://relieved-sailfish-134968.upstash.io";
-const UPSTASH_TOKEN = "gQAAAAAAAg84AAIgcDEyYTEzOGNmZWMzMzk0MjBhYTIzZTk3NmIyOGU0MGM1ZA";
+// UPSTASH REDIS BAĞLANTI (YENİ)
+const UPSTASH_URL = "https://uncommon-monkey-135537.upstash.io";
+const UPSTASH_TOKEN = "gQAAAAAAAhFxAAIgcDIyZDllZWY2MjZlZDU0MjAwOTYwYzhjYTkzYmI4MDY3ZQ";
 
 const KITS: Record<string, { ad: string; icon: JSX.Element; color: string }> = {
   vanilla: { 
