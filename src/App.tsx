@@ -113,7 +113,6 @@ export default function App() {
     onlineStatus: "ON"
   });
 
-  // Redis'ten verileri yükle
   useEffect(() => {
     const loadPlayers = async () => {
       try {
@@ -137,7 +136,6 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // Puan hesaplama ve sıralama
   useEffect(() => {
     const updatedPlayers = players.map(player => {
       let total = 0;
@@ -360,7 +358,7 @@ export default function App() {
                             <th className="text-left px-6 py-4 text-xs font-semibold text-white/40 uppercase tracking-wider">Oyuncu</th>
                             <th className="text-center px-4 py-4 text-xs font-semibold text-white/40 uppercase tracking-wider w-24">Bölge</th>
                             <th className="text-right px-6 py-4 text-xs font-semibold text-white/40 uppercase tracking-wider">Tierler</th>
-                          </tr>
+                          <tr>
                         </thead>
                         <tbody className="divide-y divide-white/[0.03]">
                           {kitPlayers.slice(0, 50).map((player, idx) => (
