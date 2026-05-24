@@ -21,9 +21,6 @@ type PageType = "home" | "rankings";
 const UPSTASH_URL = "https://uncommon-monkey-135537.upstash.io";
 const UPSTASH_TOKEN = "gQAAAAAAAhFxAAIgcDIyZDllZWY2MjZlZDU0MjAwOTYwYzhjYTkzYmI4MDY3ZQ";
 
-// Minecraft hesabı için link
-const getMinecraftLink = (minecraftNick: string) => `https://namemc.com/profile/${minecraftNick}`;
-
 const KITS: Record<string, { ad: string; icon: JSX.Element; color: string }> = {
   vanilla: { 
     ad: "Vanilla", 
@@ -67,7 +64,6 @@ const KITS: Record<string, { ad: string; icon: JSX.Element; color: string }> = {
   },
 };
 
-// PUANLAMA SİSTEMİ
 const TIER_POINTS: Record<string, number> = {
   HT1: 100, HT2: 85, HT3: 70, HT4: 60, HT5: 50,
   LT1: 40,  LT2: 30, LT3: 20, LT4: 10, LT5: 5,
@@ -117,6 +113,7 @@ export default function App() {
     onlineStatus: "ON"
   });
 
+  // Redis'ten verileri yükle
   useEffect(() => {
     const loadPlayers = async () => {
       try {
@@ -140,6 +137,7 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // Puan hesaplama ve sıralama
   useEffect(() => {
     const updatedPlayers = players.map(player => {
       let total = 0;
@@ -157,7 +155,7 @@ export default function App() {
   const filteredPlayers = useMemo(() => {
     if (!searchQuery) return players;
     return players.filter(p =>
-      p.username.toLowerCase().includes(searchQuery.toLowerCase())
+      (p.minecraftNick || p.username).toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [players, searchQuery]);
 
@@ -391,14 +389,12 @@ export default function App() {
                               </td>
                               <td className="px-6 py-4">
                                 <div className="flex items-center gap-4">
-                                  <a href={getMinecraftLink(player.minecraftNick || player.username)} target="_blank" rel="noopener noreferrer">
-                                    <img src={player.avatar} alt={player.username} className="w-12 h-12 rounded-xl ring-2 ring-white/10 group-hover:ring-cyan-500/50 transition-all" onError={(e) => { (e.target as HTMLImageElement).src = `https://mc-heads.net/avatar/Steve/64`; }} />
-                                  </a>
+                                  <img src={player.avatar} alt={player.minecraftNick || player.username} className="w-12 h-12 rounded-xl ring-2 ring-white/10 group-hover:ring-cyan-500/50 transition-all" onError={(e) => { (e.target as HTMLImageElement).src = `https://mc-heads.net/avatar/Steve/64`; }} />
                                   <div>
                                     <div className="flex items-center gap-2">
-                                      <a href={getMinecraftLink(player.minecraftNick || player.username)} target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-cyan-400 transition-colors">
-                                        {player.username}
-                                      </a>
+                                      <span className="font-bold text-white group-hover:text-cyan-400 transition-colors">
+                                        {player.minecraftNick || player.username}
+                                      </span>
                                     </div>
                                     <div className="flex items-center gap-2 mt-1">
                                       <span className={`text-xs font-medium ${
@@ -487,7 +483,7 @@ export default function App() {
                                     <img src={player.avatar} alt="" className="w-8 h-8 rounded-lg ring-1 ring-white/10 group-hover:ring-cyan-500/50 transition-all" onError={(e) => { (e.target as HTMLImageElement).src = `https://mc-heads.net/avatar/Steve/32`; }} />
                                     <div className="flex-1 min-w-0">
                                       <span className="text-sm font-medium truncate group-hover:text-cyan-400 transition-colors block">
-                                        {player.username}
+                                        {player.minecraftNick || player.username}
                                       </span>
                                       <div className="flex items-center gap-1.5 mt-0.5">
                                         <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold bg-gradient-to-r ${TIER_COLORS[tier] || "from-gray-600 to-gray-700"} text-white`}>{tier}</span>
@@ -523,15 +519,13 @@ export default function App() {
                 <div className="flex items-center gap-4">
                   <div className="relative">
                     <div className="absolute inset-0 bg-gradient-to-br from-cyan-400 to-blue-600 blur-xl opacity-50" />
-                    <a href={getMinecraftLink(selectedPlayer.minecraftNick || selectedPlayer.username)} target="_blank" rel="noopener noreferrer">
-                      <img src={selectedPlayer.avatar} alt="" className="relative w-20 h-20 rounded-2xl ring-2 ring-white/20" onError={(e) => { (e.target as HTMLImageElement).src = `https://mc-heads.net/avatar/Steve/64`; }} />
-                    </a>
+                    <img src={selectedPlayer.avatar} alt="" className="relative w-20 h-20 rounded-2xl ring-2 ring-white/20" onError={(e) => { (e.target as HTMLImageElement).src = `https://mc-heads.net/avatar/Steve/64`; }} />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <a href={getMinecraftLink(selectedPlayer.minecraftNick || selectedPlayer.username)} target="_blank" rel="noopener noreferrer" className="text-2xl font-black hover:text-cyan-400 transition-colors">
-                        {selectedPlayer.username}
-                      </a>
+                      <span className="text-2xl font-black">
+                        {selectedPlayer.minecraftNick || selectedPlayer.username}
+                      </span>
                     </div>
                     <div className="flex items-center gap-3 mt-1.5">
                       <span className={`px-3 py-1 rounded-full text-xs font-bold ${
