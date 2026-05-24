@@ -11,9 +11,10 @@ interface Player {
   totalPoints: number;
   rank: number;
   tests: number;
+  minecraftNick?: string;
 }
 
-type KitKey = "overall" | "vanilla" | "sword" | "axe" | "nethpot" | "pot" | "uhc" | "mace" | "smp";
+type KitKey = "overall" | "vanilla" | "sword" | "axe" | "nethpot" | "pot" | "uhc" | "crystal" | "mace" | "smp";
 type PageType = "home" | "rankings";
 
 // UPSTASH REDIS BAĞLANTI
@@ -21,7 +22,7 @@ const UPSTASH_URL = "https://uncommon-monkey-135537.upstash.io";
 const UPSTASH_TOKEN = "gQAAAAAAAhFxAAIgcDIyZDllZWY2MjZlZDU0MjAwOTYwYzhjYTkzYmI4MDY3ZQ";
 
 // Minecraft hesabı için link
-const getMinecraftLink = (username: string) => `https://namemc.com/profile/${username}`;
+const getMinecraftLink = (minecraftNick: string) => `https://namemc.com/profile/${minecraftNick}`;
 
 const KITS: Record<string, { ad: string; icon: JSX.Element; color: string }> = {
   vanilla: { 
@@ -54,6 +55,11 @@ const KITS: Record<string, { ad: string; icon: JSX.Element; color: string }> = {
     icon: <img src="https://www.tierslist.net/tier_icons/uhc.svg" width="30" height="30" alt="UHC" className="w-7 h-7" />, 
     color: "#ef4444" 
   },
+  crystal: { 
+    ad: "Crystal", 
+    icon: <img src="https://www.tierslist.net/tier_icons/crystal.svg" width="30" height="30" alt="Crystal" className="w-7 h-7" />, 
+    color: "#06b6d4" 
+  },
   smp:     { 
     ad: "SMP", 
     icon: <img src="https://www.tierslist.net/tier_icons/smp.svg" width="30" height="30" alt="SMP" className="w-7 h-7" />, 
@@ -66,7 +72,7 @@ const KITS: Record<string, { ad: string; icon: JSX.Element; color: string }> = {
   },
 };
 
-// YENİ PUANLAMA SİSTEMİ
+// PUANLAMA SİSTEMİ
 const TIER_POINTS: Record<string, number> = {
   HT1: 100, HT2: 85, HT3: 70, HT4: 60, HT5: 50,
   LT1: 40,  LT2: 30, LT3: 20, LT4: 10, LT5: 5,
@@ -85,9 +91,10 @@ const TIER_COLORS: Record<string, string> = {
   LT5: "from-gray-500 to-gray-700",
 };
 
-const KIT_ORDER: KitKey[] = ["overall", "vanilla", "sword", "axe", "nethpot", "pot", "uhc", "mace", "smp"];
+const KIT_ORDER: KitKey[] = ["overall", "vanilla", "sword", "axe", "nethpot", "pot", "uhc", "crystal", "smp", "mace"];
 
 const getTitle = (points: number): string => {
+  if (points >= 400) return "Legend";
   if (points >= 300) return "Combat Master";
   if (points >= 200) return "Combat Ace";
   if (points >= 150) return "Combat Veteran";
@@ -111,12 +118,11 @@ export default function App() {
   
   const [stats, setStats] = useState({
     totalPlayers: 0,
-    activeKits: 8,
+    activeKits: 9,
     tierLevels: 10,
     onlineStatus: "ON"
   });
 
-  // Redis'ten oyuncu verilerini yükle
   useEffect(() => {
     const loadPlayers = async () => {
       try {
@@ -140,7 +146,6 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // Oyuncuların toplam puanlarını hesapla
   useEffect(() => {
     const updatedPlayers = players.map(player => {
       let total = 0;
@@ -392,17 +397,18 @@ export default function App() {
                               </td>
                               <td className="px-6 py-4">
                                 <div className="flex items-center gap-4">
-                                  <a href={getMinecraftLink(player.username)} target="_blank" rel="noopener noreferrer">
+                                  <a href={getMinecraftLink(player.minecraftNick || player.username)} target="_blank" rel="noopener noreferrer">
                                     <img src={player.avatar} alt={player.username} className="w-12 h-12 rounded-xl ring-2 ring-white/10 group-hover:ring-cyan-500/50 transition-all" onError={(e) => { (e.target as HTMLImageElement).src = `https://mc-heads.net/avatar/Steve/64`; }} />
                                   </a>
                                   <div>
                                     <div className="flex items-center gap-2">
-                                      <a href={getMinecraftLink(player.username)} target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-cyan-400 transition-colors">
+                                      <a href={getMinecraftLink(player.minecraftNick || player.username)} target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-cyan-400 transition-colors">
                                         {player.username}
                                       </a>
                                     </div>
                                     <div className="flex items-center gap-2 mt-1">
                                       <span className={`text-xs font-medium ${
+                                        player.totalPoints >= 400 ? "text-amber-400" :
                                         player.totalPoints >= 300 ? "text-amber-400" :
                                         player.totalPoints >= 200 ? "text-purple-400" : "text-cyan-400"
                                       }`}>
@@ -524,18 +530,19 @@ export default function App() {
                 <div className="flex items-center gap-4">
                   <div className="relative">
                     <div className="absolute inset-0 bg-gradient-to-br from-cyan-400 to-blue-600 blur-xl opacity-50" />
-                    <a href={getMinecraftLink(selectedPlayer.username)} target="_blank" rel="noopener noreferrer">
+                    <a href={getMinecraftLink(selectedPlayer.minecraftNick || selectedPlayer.username)} target="_blank" rel="noopener noreferrer">
                       <img src={selectedPlayer.avatar} alt="" className="relative w-20 h-20 rounded-2xl ring-2 ring-white/20" onError={(e) => { (e.target as HTMLImageElement).src = `https://mc-heads.net/avatar/Steve/64`; }} />
                     </a>
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <a href={getMinecraftLink(selectedPlayer.username)} target="_blank" rel="noopener noreferrer" className="text-2xl font-black hover:text-cyan-400 transition-colors">
+                      <a href={getMinecraftLink(selectedPlayer.minecraftNick || selectedPlayer.username)} target="_blank" rel="noopener noreferrer" className="text-2xl font-black hover:text-cyan-400 transition-colors">
                         {selectedPlayer.username}
                       </a>
                     </div>
                     <div className="flex items-center gap-3 mt-1.5">
                       <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                        selectedPlayer.totalPoints >= 400 ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" :
                         selectedPlayer.totalPoints >= 300 ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" :
                         selectedPlayer.totalPoints >= 200 ? "bg-purple-500/20 text-purple-400 border border-purple-500/30" :
                         "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
