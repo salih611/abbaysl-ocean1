@@ -16,7 +16,7 @@ interface Player {
 type KitKey = "overall" | "vanilla" | "sword" | "axe" | "nethpot" | "pot" | "uhc" | "mace" | "smp";
 type PageType = "home" | "rankings";
 
-// UPSTASH REDIS BAĞLANTI (YENİ)
+// UPSTASH REDIS BAĞLANTI
 const UPSTASH_URL = "https://uncommon-monkey-135537.upstash.io";
 const UPSTASH_TOKEN = "gQAAAAAAAhFxAAIgcDIyZDllZWY2MjZlZDU0MjAwOTYwYzhjYTkzYmI4MDY3ZQ";
 
