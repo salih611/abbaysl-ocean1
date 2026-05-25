@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface Player {
   id: string;
@@ -220,292 +219,261 @@ export default function App() {
         </div>
       </header>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentPage}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-          className="relative z-10"
-        >
-          {currentPage === "home" && (
-            <main className="max-w-[1400px] mx-auto px-4 py-12">
-              <div className="text-center mb-16">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-cyan-400 text-sm font-semibold mb-6">
-                  <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
-                  Minecraft Tier Sunucusu
+      {currentPage === "home" && (
+        <main className="max-w-[1400px] mx-auto px-4 py-12">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-cyan-400 text-sm font-semibold mb-6">
+              <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
+              Minecraft Tier Sunucusu
+            </div>
+            <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
+              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent">ABYSSAL OCEAN</span>
+              <br />
+              <span className="text-white">Tier Sunucusu</span>
+            </h1>
+            <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-8">Türkiye'nin en kaliteli Minecraft PvP tier test sunucusu. Yeteneğini kanıtla, sıralamada yüksel, efsane ol!</p>
+            <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
+              <button onClick={() => setCurrentPage("rankings")} className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl font-semibold">🏆 Sıralamayı Gör</button>
+              <a href="https://discord.gg/cKFwKcfcWn" target="_blank" className="px-6 py-3 bg-[#5865F2] rounded-xl font-semibold flex items-center gap-2"><DiscordIcon className="w-5 h-5" /> Discord'a Katıl</a>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+            {[
+              { label: "Toplam Oyuncu", value: stats.totalPlayers, icon: "👥", color: "from-cyan-500 to-blue-600" },
+              { label: "Aktif Kit", value: stats.activeKits, icon: "⚔️", color: "from-purple-500 to-pink-600" },
+              { label: "Tier Seviyesi", value: stats.tierLevels, icon: "🏆", color: "from-amber-500 to-orange-600" },
+              { label: "7/24 Online", value: stats.onlineStatus, icon: "🟢", color: "from-emerald-500 to-green-600" },
+            ].map((stat, i) => (
+              <div key={i} className="bg-[#11161f] border border-white/5 rounded-2xl p-6">
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-2xl mb-4`}>{stat.icon}</div>
+                <div className="text-3xl font-black mb-1">{stat.value}</div>
+                <div className="text-sm text-white/50">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+            {Object.entries(KITS).map(([key, kit]) => (
+              <div key={key} className="bg-[#11161f] border border-white/5 rounded-2xl p-6 hover:border-cyan-500/30 cursor-pointer group" onClick={() => { setCurrentPage("rankings"); setSelectedKit(key as KitKey); }}>
+                <div className="mb-3 group-hover:scale-110 transition-transform flex justify-center">{kit.icon}</div>
+                <h3 className="text-lg font-bold text-center">{kit.ad}</h3>
+                <p className="text-xs text-white/40 text-center">Tier sistemiyle test edilebilir</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            {[
+              { icon: "🎯", title: "Adil Tier Sistemi", desc: "Tecrübeli ekibimiz tarafından objektif olarak değerlendirilirsin." },
+              { icon: "🏅", title: "Profesyonel Testerlar", desc: "Yıllardır PvP yapan deneyimli ekibimizle test ol." },
+              { icon: "🔥", title: "Sürekli Güncelleme", desc: "Sunucumuz sürekli geliştirilir, yeni özellikler eklenir." },
+              { icon: "👥", title: "Aktif Topluluk", desc: "Discord'umuzda yüzlerce aktif üye seni bekliyor." },
+              { icon: "🛡️", title: "Güvenli Ortam", desc: "Hile, küfür ve toxic davranışlara sıfır tolerans." },
+            ].map((feature, i) => (
+              <div key={i} className="bg-[#11161f] border border-white/5 rounded-2xl p-6">
+                <div className="text-4xl mb-4">{feature.icon}</div>
+                <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+                <p className="text-sm text-white/60 leading-relaxed">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="relative bg-gradient-to-br from-cyan-600/20 via-blue-600/20 to-purple-600/20 border border-white/10 rounded-3xl p-8 md:p-12 text-center overflow-hidden">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/20 rounded-full blur-[100px]" />
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px]" />
+            <div className="relative">
+              <h2 className="text-3xl md:text-5xl font-black mb-4">Hazır mısın?</h2>
+              <p className="text-lg text-white/70 mb-6 max-w-2xl mx-auto">Discord sunucumuza katıl, tier test başvurusu yap ve yeteneğini herkese kanıtla!</p>
+              <a href="https://discord.gg/cKFwKcfcWn" target="_blank" className="inline-flex items-center gap-2 px-8 py-4 bg-[#5865F2] rounded-xl font-bold text-lg"><DiscordIcon className="w-6 h-6" /> Hemen Katıl</a>
+            </div>
+          </div>
+
+          <div className="mt-16 pt-8 border-t border-white/5 text-center text-white/40 text-sm">
+            <p>© 2025 Abyssal Ocean Tier List. Tüm hakları saklıdır.</p>
+          </div>
+        </main>
+      )}
+
+      {currentPage === "rankings" && (
+        <main className="max-w-[1400px] mx-auto px-4 py-6">
+          <div className="mb-6 overflow-x-auto scrollbar-hide">
+            <div className="flex gap-2 pb-2">
+              {KIT_ORDER.map((key) => {
+                const isOverall = key === "overall";
+                const kit = isOverall ? { ad: "Overall", icon: <span className="text-xl">🏆</span> } : KITS[key];
+                const isActive = selectedKit === key;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => setSelectedKit(key)}
+                    className={`px-5 py-3 rounded-2xl font-medium whitespace-nowrap flex items-center gap-2.5 transition-all ${
+                      isActive ? "bg-white text-black shadow-lg" : "bg-[#1a1f2e] text-white/60 hover:bg-[#222838] hover:text-white"
+                    }`}
+                  >
+                    <div className="w-7 h-7 flex items-center justify-center">{kit.icon}</div>
+                    <span className="text-sm font-semibold">{kit.ad}</span>
+                    {isActive && <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-8 h-1 bg-white rounded-full" />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {selectedKit === "overall" ? (
+            <div className="bg-[#11161f] rounded-2xl border border-white/5 overflow-hidden">
+              {players.length === 0 ? (
+                <div className="py-32 text-center">
+                  <div className="text-6xl mb-4 opacity-20">🏆</div>
+                  <h3 className="text-xl font-bold text-white/30 mb-2">Henüz Oyuncu Yok</h3>
+                  <p className="text-white/20 text-sm max-w-md mx-auto">Discord botunuzda /test-sonuc komutunu kullandığınızda oyuncular burada görünecek.</p>
                 </div>
-                <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-                  <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent">ABYSSAL OCEAN</span>
-                  <br />
-                  <span className="text-white">Tier Sunucusu</span>
-                </h1>
-                <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-8">Türkiye'nin en kaliteli Minecraft PvP tier test sunucusu. Yeteneğini kanıtla, sıralamada yüksel, efsane ol!</p>
-                <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
-                  <button onClick={() => setCurrentPage("rankings")} className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl font-semibold">🏆 Sıralamayı Gör</button>
-                  <a href="https://discord.gg/cKFwKcfcWn" target="_blank" className="px-6 py-3 bg-[#5865F2] rounded-xl font-semibold flex items-center gap-2"><DiscordIcon className="w-5 h-5" /> Discord'a Katıl</a>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
-                {[
-                  { label: "Toplam Oyuncu", value: stats.totalPlayers, icon: "👥", color: "from-cyan-500 to-blue-600" },
-                  { label: "Aktif Kit", value: stats.activeKits, icon: "⚔️", color: "from-purple-500 to-pink-600" },
-                  { label: "Tier Seviyesi", value: stats.tierLevels, icon: "🏆", color: "from-amber-500 to-orange-600" },
-                  { label: "7/24 Online", value: stats.onlineStatus, icon: "🟢", color: "from-emerald-500 to-green-600" },
-                ].map((stat, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="bg-[#11161f] border border-white/5 rounded-2xl p-6">
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-2xl mb-4`}>{stat.icon}</div>
-                    <div className="text-3xl font-black mb-1">{stat.value}</div>
-                    <div className="text-sm text-white/50">{stat.label}</div>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
-                {Object.entries(KITS).map(([key, kit], i) => (
-                  <motion.div key={key} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }} className="bg-[#11161f] border border-white/5 rounded-2xl p-6 hover:border-cyan-500/30 cursor-pointer group" onClick={() => { setCurrentPage("rankings"); setSelectedKit(key as KitKey); }}>
-                    <div className="mb-3 group-hover:scale-110 transition-transform flex justify-center">{kit.icon}</div>
-                    <h3 className="text-lg font-bold text-center">{kit.ad}</h3>
-                    <p className="text-xs text-white/40 text-center">Tier sistemiyle test edilebilir</p>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-                {[
-                  { icon: "🎯", title: "Adil Tier Sistemi", desc: "Tecrübeli ekibimiz tarafından objektif olarak değerlendirilirsin." },
-                  { icon: "🏅", title: "Profesyonel Testerlar", desc: "Yıllardır PvP yapan deneyimli ekibimizle test ol." },
-                  { icon: "🔥", title: "Sürekli Güncelleme", desc: "Sunucumuz sürekli geliştirilir, yeni özellikler eklenir." },
-                  { icon: "👥", title: "Aktif Topluluk", desc: "Discord'umuzda yüzlerce aktif üye seni bekliyor." },
-                  { icon: "🛡️", title: "Güvenli Ortam", desc: "Hile, küfür ve toxic davranışlara sıfır tolerans." },
-                ].map((feature, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="bg-[#11161f] border border-white/5 rounded-2xl p-6">
-                    <div className="text-4xl mb-4">{feature.icon}</div>
-                    <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                    <p className="text-sm text-white/60 leading-relaxed">{feature.desc}</p>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="relative bg-gradient-to-br from-cyan-600/20 via-blue-600/20 to-purple-600/20 border border-white/10 rounded-3xl p-8 md:p-12 text-center overflow-hidden">
-                <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/20 rounded-full blur-[100px]" />
-                <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px]" />
-                <div className="relative">
-                  <h2 className="text-3xl md:text-5xl font-black mb-4">Hazır mısın?</h2>
-                  <p className="text-lg text-white/70 mb-6 max-w-2xl mx-auto">Discord sunucumuza katıl, tier test başvurusu yap ve yeteneğini herkese kanıtla!</p>
-                  <a href="https://discord.gg/cKFwKcfcWn" target="_blank" className="inline-flex items-center gap-2 px-8 py-4 bg-[#5865F2] rounded-xl font-bold text-lg"><DiscordIcon className="w-6 h-6" /> Hemen Katıl</a>
-                </div>
-              </div>
-
-              <div className="mt-16 pt-8 border-t border-white/5 text-center text-white/40 text-sm">
-                <p>© 2025 Abyssal Ocean Tier List. Tüm hakları saklıdır.</p>
-              </div>
-            </main>
-          )}
-
-          {currentPage === "rankings" && (
-            <main className="max-w-[1400px] mx-auto px-4 py-6">
-              <div className="mb-6 overflow-x-auto scrollbar-hide">
-                <div className="flex gap-2 pb-2">
-                  {KIT_ORDER.map((key, index) => {
-                    const isOverall = key === "overall";
-                    const kit = isOverall ? { ad: "Overall", icon: <span className="text-xl">🏆</span> } : KITS[key];
-                    const isActive = selectedKit === key;
-                    return (
-                      <motion.button
-                        key={key}
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05, duration: 0.3 }}
-                        onClick={() => setSelectedKit(key)}
-                        className={`px-5 py-3 rounded-2xl font-medium whitespace-nowrap flex items-center gap-2.5 transition-all ${
-                          isActive ? "bg-white text-black shadow-lg" : "bg-[#1a1f2e] text-white/60 hover:bg-[#222838] hover:text-white"
-                        }`}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <div className="w-7 h-7 flex items-center justify-center">{kit.icon}</div>
-                        <span className="text-sm font-semibold">{kit.ad}</span>
-                        {isActive && (
-                          <motion.div
-                            layoutId="activeTab"
-                            className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-8 h-1 bg-white rounded-full"
-                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                          />
-                        )}
-                      </motion.button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {selectedKit === "overall" ? (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-[#11161f] rounded-2xl border border-white/5 overflow-hidden">
-                  {players.length === 0 ? (
-                    <div className="py-32 text-center">
-                      <div className="text-6xl mb-4 opacity-20">🏆</div>
-                      <h3 className="text-xl font-bold text-white/30 mb-2">Henüz Oyuncu Yok</h3>
-                      <p className="text-white/20 text-sm max-w-md mx-auto">Discord botunuzda /test-sonuc komutunu kullandığınızda oyuncular burada görünecek.</p>
-                    </div>
-                  ) : (
-                    <div className="overflow-x-auto">
-                      <table className="w-full">
-                        <thead>
-                          <tr className="border-b border-white/5 bg-[#0f141b]/50">
-                            <th className="text-left px-6 py-4 text-xs font-semibold text-white/40 uppercase tracking-wider w-16">#</th>
-                            <th className="text-left px-6 py-4 text-xs font-semibold text-white/40 uppercase tracking-wider">Oyuncu</th>
-                            <th className="text-center px-4 py-4 text-xs font-semibold text-white/40 uppercase tracking-wider w-24">Bölge</th>
-                            <th className="text-right px-6 py-4 text-xs font-semibold text-white/40 uppercase tracking-wider">Tierler</th>
-                          <tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/[0.03]">
-                          {kitPlayers.slice(0, 50).map((player, idx) => (
-                            <motion.tr
-                              key={player.id}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: idx * 0.01 }}
-                              onClick={() => setSelectedPlayer(player)}
-                              className="group hover:bg-white/5 cursor-pointer transition-all"
-                            >
-                              <td className="px-6 py-4">
-                                {player.rank <= 3 ? (
-                                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg ${
-                                    player.rank === 1 ? "bg-gradient-to-br from-amber-400 to-yellow-600 text-black" :
-                                    player.rank === 2 ? "bg-gradient-to-br from-slate-300 to-slate-500 text-black" :
-                                    "bg-gradient-to-br from-orange-600 to-amber-700 text-white"
-                                  }`}>
-                                    {player.rank}
-                                  </div>
-                                ) : (
-                                  <span className="w-10 text-center text-xl font-bold text-white/30 block group-hover:text-white/60 transition-colors">
-                                    {player.rank}
-                                  </span>
-                                )}
-                              </td>
-                              <td className="px-6 py-4">
-                                <div className="flex items-center gap-4">
-                                  <img src={player.avatar} alt={player.minecraftNick || player.username} className="w-12 h-12 rounded-xl ring-2 ring-white/10 group-hover:ring-cyan-500/50 transition-all" onError={(e) => { (e.target as HTMLImageElement).src = `https://mc-heads.net/avatar/Steve/64`; }} />
-                                  <div>
-                                    <div className="flex items-center gap-2">
-                                      <span className="font-bold text-white group-hover:text-cyan-400 transition-colors">
-                                        {player.minecraftNick || player.username}
-                                      </span>
-                                    </div>
-                                    <div className="flex items-center gap-2 mt-1">
-                                      <span className={`text-xs font-medium ${
-                                        player.totalPoints >= 300 ? "text-amber-400" :
-                                        player.totalPoints >= 200 ? "text-purple-400" : "text-cyan-400"
-                                      }`}>
-                                        {getTitle(player.totalPoints)}
-                                      </span>
-                                      <span className="text-xs text-white/30">•</span>
-                                      <span className="text-xs text-white/50">{player.totalPoints} puan</span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </td>
-                              <td className="px-4 py-4 text-center">
-                                <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 text-xs font-bold border border-emerald-500/20">
-                                  {player.region}
-                                </span>
-                              </td>
-                              <td className="px-6 py-4">
-                                <div className="flex items-center justify-end gap-1.5 flex-wrap">
-                                  {Object.entries(KITS).map(([kitKey, kit]) => {
-                                    const tier = player.tiers[kitKey];
-                                    return (
-                                      <div key={kitKey} className="w-9 h-9 rounded-lg bg-[#0f141b] border border-white/10 flex flex-col items-center justify-center hover:border-white/20 transition-all hover:scale-110" title={`${kit.ad}: ${tier || "—"}`}>
-                                        <div className="text-[10px] leading-none flex justify-center">{kit.icon}</div>
-                                        <span className={`text-[9px] font-bold leading-none mt-0.5 ${tier?.startsWith("HT") ? "text-amber-400" : "text-white/60"}`}>
-                                          {tier || "—"}
-                                        </span>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              </td>
-                            </motion.tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                </motion.div>
               ) : (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                  {[1, 2, 3, 4, 5].map((tierNum, idx) => {
-                    const tierPlayers = playersByTier?.[tierNum] || [];
-                    return (
-                      <motion.div
-                        key={tierNum}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.1 }}
-                        className="bg-[#11161f] rounded-xl border border-white/5 overflow-hidden"
-                      >
-                        <div className={`px-4 py-3 border-b border-white/5 ${
-                          tierNum === 1 ? "bg-gradient-to-r from-amber-500/20 to-yellow-600/20" :
-                          tierNum === 2 ? "bg-gradient-to-r from-slate-500/20 to-slate-600/20" :
-                          tierNum === 3 ? "bg-gradient-to-r from-orange-600/20 to-amber-700/20" :
-                          "bg-[#0f141b]/50"
-                        }`}>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <span className="text-xl">
-                                {tierNum === 1 ? "👑" : tierNum === 2 ? "🥈" : tierNum === 3 ? "🥉" : "🏅"}
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-white/5 bg-[#0f141b]/50">
+                        <th className="text-left px-6 py-4 text-xs font-semibold text-white/40 uppercase tracking-wider w-16">#</th>
+                        <th className="text-left px-6 py-4 text-xs font-semibold text-white/40 uppercase tracking-wider">Oyuncu</th>
+                        <th className="text-center px-4 py-4 text-xs font-semibold text-white/40 uppercase tracking-wider w-24">Bölge</th>
+                        <th className="text-right px-6 py-4 text-xs font-semibold text-white/40 uppercase tracking-wider">Tierler</th>
+                      </table>
+                    </thead>
+                    <tbody className="divide-y divide-white/[0.03]">
+                      {kitPlayers.slice(0, 50).map((player) => (
+                        <tr
+                          key={player.id}
+                          onClick={() => setSelectedPlayer(player)}
+                          className="group hover:bg-white/5 cursor-pointer transition-all"
+                        >
+                          <td className="px-6 py-4">
+                            {player.rank <= 3 ? (
+                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg ${
+                                player.rank === 1 ? "bg-gradient-to-br from-amber-400 to-yellow-600 text-black" :
+                                player.rank === 2 ? "bg-gradient-to-br from-slate-300 to-slate-500 text-black" :
+                                "bg-gradient-to-br from-orange-600 to-amber-700 text-white"
+                              }`}>
+                                {player.rank}
+                              </div>
+                            ) : (
+                              <span className="w-10 text-center text-xl font-bold text-white/30 block group-hover:text-white/60 transition-colors">
+                                {player.rank}
                               </span>
-                              <h3 className="font-bold">Tier {tierNum}</h3>
+                            )}
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-4">
+                              <img src={player.avatar} alt={player.minecraftNick || player.username} className="w-12 h-12 rounded-xl ring-2 ring-white/10 group-hover:ring-cyan-500/50 transition-all" onError={(e) => { (e.target as HTMLImageElement).src = `https://mc-heads.net/avatar/Steve/64`; }} />
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-bold text-white group-hover:text-cyan-400 transition-colors">
+                                    {player.minecraftNick || player.username}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <span className={`text-xs font-medium ${
+                                    player.totalPoints >= 300 ? "text-amber-400" :
+                                    player.totalPoints >= 200 ? "text-purple-400" : "text-cyan-400"
+                                  }`}>
+                                    {getTitle(player.totalPoints)}
+                                  </span>
+                                  <span className="text-xs text-white/30">•</span>
+                                  <span className="text-xs text-white/50">{player.totalPoints} puan</span>
+                                </div>
+                              </div>
                             </div>
-                            <span className="text-xs text-white/50">{tierPlayers.length}</span>
-                          </div>
-                        </div>
-                        <div className="p-2 max-h-[600px] overflow-y-auto custom-scroll">
-                          {tierPlayers.length === 0 ? (
-                            <div className="py-16 text-center">
-                              <div className="text-3xl mb-2 opacity-20">👤</div>
-                              <p className="text-xs text-white/30">Henüz oyuncu yok</p>
-                            </div>
-                          ) : (
-                            <div className="space-y-1">
-                              {tierPlayers.map((player) => {
-                                const tier = player.tiers[selectedKit];
+                          </td>
+                          <td className="px-4 py-4 text-center">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 text-xs font-bold border border-emerald-500/20">
+                              {player.region}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center justify-end gap-1.5 flex-wrap">
+                              {Object.entries(KITS).map(([kitKey, kit]) => {
+                                const tier = player.tiers[kitKey];
                                 return (
-                                  <button
-                                    key={player.id}
-                                    onClick={() => setSelectedPlayer(player)}
-                                    className="w-full flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-white/5 transition-all group text-left"
-                                  >
-                                    <img src={player.avatar} alt="" className="w-8 h-8 rounded-lg ring-1 ring-white/10 group-hover:ring-cyan-500/50 transition-all" onError={(e) => { (e.target as HTMLImageElement).src = `https://mc-heads.net/avatar/Steve/32`; }} />
-                                    <div className="flex-1 min-w-0">
-                                      <span className="text-sm font-medium truncate group-hover:text-cyan-400 transition-colors block">
-                                        {player.minecraftNick || player.username}
-                                      </span>
-                                      <div className="flex items-center gap-1.5 mt-0.5">
-                                        <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold bg-gradient-to-r ${TIER_COLORS[tier] || "from-gray-600 to-gray-700"} text-white`}>{tier}</span>
-                                        <span className="text-[10px] text-white/40">{TIER_POINTS[tier]}p</span>
-                                      </div>
-                                    </div>
-                                    <svg className="w-3.5 h-3.5 text-white/20 group-hover:text-white/60 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
-                                  </button>
+                                  <div key={kitKey} className="w-9 h-9 rounded-lg bg-[#0f141b] border border-white/10 flex flex-col items-center justify-center hover:border-white/20 transition-all hover:scale-110" title={`${kit.ad}: ${tier || "—"}`}>
+                                    <div className="text-[10px] leading-none flex justify-center">{kit.icon}</div>
+                                    <span className={`text-[9px] font-bold leading-none mt-0.5 ${tier?.startsWith("HT") ? "text-amber-400" : "text-white/60"}`}>
+                                      {tier || "—"}
+                                    </span>
+                                  </div>
                                 );
                               })}
                             </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </motion.div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  </div>
               )}
-            </main>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {[1, 2, 3, 4, 5].map((tierNum) => {
+                const tierPlayers = playersByTier?.[tierNum] || [];
+                return (
+                  <div key={tierNum} className="bg-[#11161f] rounded-xl border border-white/5 overflow-hidden">
+                    <div className={`px-4 py-3 border-b border-white/5 ${
+                      tierNum === 1 ? "bg-gradient-to-r from-amber-500/20 to-yellow-600/20" :
+                      tierNum === 2 ? "bg-gradient-to-r from-slate-500/20 to-slate-600/20" :
+                      tierNum === 3 ? "bg-gradient-to-r from-orange-600/20 to-amber-700/20" :
+                      "bg-[#0f141b]/50"
+                    }`}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">
+                            {tierNum === 1 ? "👑" : tierNum === 2 ? "🥈" : tierNum === 3 ? "🥉" : "🏅"}
+                          </span>
+                          <h3 className="font-bold">Tier {tierNum}</h3>
+                        </div>
+                        <span className="text-xs text-white/50">{tierPlayers.length}</span>
+                      </div>
+                    </div>
+                    <div className="p-2 max-h-[600px] overflow-y-auto custom-scroll">
+                      {tierPlayers.length === 0 ? (
+                        <div className="py-16 text-center">
+                          <div className="text-3xl mb-2 opacity-20">👤</div>
+                          <p className="text-xs text-white/30">Henüz oyuncu yok</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-1">
+                          {tierPlayers.map((player) => {
+                            const tier = player.tiers[selectedKit];
+                            return (
+                              <button
+                                key={player.id}
+                                onClick={() => setSelectedPlayer(player)}
+                                className="w-full flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-white/5 transition-all group text-left"
+                              >
+                                <img src={player.avatar} alt="" className="w-8 h-8 rounded-lg ring-1 ring-white/10 group-hover:ring-cyan-500/50 transition-all" onError={(e) => { (e.target as HTMLImageElement).src = `https://mc-heads.net/avatar/Steve/32`; }} />
+                                <div className="flex-1 min-w-0">
+                                  <span className="text-sm font-medium truncate group-hover:text-cyan-400 transition-colors block">
+                                    {player.minecraftNick || player.username}
+                                  </span>
+                                  <div className="flex items-center gap-1.5 mt-0.5">
+                                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold bg-gradient-to-r ${TIER_COLORS[tier] || "from-gray-600 to-gray-700"} text-white`}>{tier}</span>
+                                    <span className="text-[10px] text-white/40">{TIER_POINTS[tier]}p</span>
+                                  </div>
+                                </div>
+                                <svg className="w-3.5 h-3.5 text-white/20 group-hover:text-white/60 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           )}
-        </motion.div>
-      </AnimatePresence>
+        </main>
+      )}
 
       {selectedPlayer && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" onClick={() => setSelectedPlayer(null)}>
